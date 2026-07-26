@@ -44,7 +44,7 @@ export function ResumeSection() {
                   </div>
                   <div>
                     <div className="text-gray-500">PAGES</div>
-                    <div className="text-white">2</div>
+                    <div className="text-white">1</div>
                   </div>
                 </div>
 

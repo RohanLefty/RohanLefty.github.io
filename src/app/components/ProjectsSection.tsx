@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
+import { ValaraMark } from './ValaraMark';
 
 interface Project {
   id: number;
@@ -346,16 +347,15 @@ function ProjectCard({ project }: { project: Project }) {
             <g>
               {/* convergence leaders from the stream band up into the engine */}
               {[[78, 188], [150, 188], [222, 188]].map(([sx, sy], i) => (
-                <line key={i} x1={sx} y1={sy} x2="150" y2="152" stroke="#4a4a4a" strokeWidth="1" strokeDasharray="3 3" />
+                <line key={i} x1={sx} y1={sy} x2="150" y2="176" stroke="#4a4a4a" strokeWidth="1" strokeDasharray="3 3" />
               ))}
               {/* hex housing */}
               <path
-                d="M 150 100 L 178 116 L 178 148 L 150 164 L 122 148 L 122 116 Z"
+                d="M 150 90 L 187 111 L 187 153 L 150 174 L 113 153 L 113 111 Z"
                 fill="#101828" stroke="#8a8a8a" strokeWidth="1.6"
               />
-              {/* Valara "V" mark */}
-              <path d="M 139 120 L 150 143 L 161 120" fill="none" stroke="url(#valaraGrad)" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
-              <path d="M 157 116 L 166 112 L 162 121 Z" fill="url(#valaraGrad)" />
+              {/* Valara falcon-V mark */}
+              <ValaraMark cx={150} cy={132} width={56} fill="url(#valaraGrad)" />
             </g>
 
             {/* ── Layer 3: managed portfolio output (lifts on hover) ── */}
@@ -365,7 +365,7 @@ function ProjectCard({ project }: { project: Project }) {
             >
               {isHovered && (
                 <motion.line
-                  x1="150" y1="96" x2="150" y2="74"
+                  x1="150" y1="88" x2="150" y2="72"
                   stroke="#2dd4bf" strokeWidth="1" strokeDasharray="3 3"
                   initial={{ opacity: 0, pathLength: 0 }}
                   animate={{ opacity: 1, pathLength: 1 }}
@@ -391,10 +391,10 @@ function ProjectCard({ project }: { project: Project }) {
                 <motion.text x="222" y="30" fill="#2dd4bf" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                   PORTFOLIO
                 </motion.text>
-                <motion.text x="186" y="130" fill="#818cf8" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
+                <motion.text x="196" y="128" fill="#818cf8" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
                   NARRATIVE
                 </motion.text>
-                <motion.text x="186" y="142" fill="#818cf8" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.28 }}>
+                <motion.text x="196" y="140" fill="#818cf8" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.28 }}>
                   ENGINE
                 </motion.text>
                 <motion.text x="18" y="206" fill="#60a5fa" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.32 }}>
