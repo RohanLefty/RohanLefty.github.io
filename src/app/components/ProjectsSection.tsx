@@ -8,6 +8,7 @@ interface Project {
   description: string;
   specs: string[];
   status?: string;
+  link?: string;
 }
 
 const projects: Project[] = [
@@ -15,6 +16,7 @@ const projects: Project[] = [
     id: 1,
     title: 'Gambit',
     category: 'ROBOTICS',
+    status: 'In Progress',
     description:
       'A 3-axis Cartesian gantry that plays physical chess against a human opponent. An overhead camera reads the board, an embedded engine plans each move, and an electromagnet end-effector lifts and places the pieces.',
     specs: [
@@ -42,17 +44,17 @@ const projects: Project[] = [
   },
   {
     id: 3,
-    title: 'Dexter',
-    category: 'BIOMIMETICS',
-    status: 'In Progress',
+    title: 'Valara',
+    category: 'MARKET INTELLIGENCE',
+    link: 'https://valara.ca',
     description:
-      'An anthropomorphic robotic hand that mimics the human hand — five tendon-driven fingers with fully articulated joints, capable of dexterous gestures and adaptive grasping.',
+      'Valara gives retail investors access to institutional-grade market intelligence by aggregating data from 20+ sources to identify emerging market narratives before they hit mainstream news. It then uses those insights to actively manage a portfolio spanning ETFs, stocks, options, crypto, and prediction markets. Try Valara free today.',
     specs: [
-      'Fingers: 5, tendon-driven',
-      'Degrees of Freedom: 16',
-      'Actuation: Servo + Dyneema tendons',
-      'Grip Force: 20N',
-      'Feedback: Per-joint encoders'
+      'Data Sources: 20+ streams',
+      'Detection Lead: ~20 days pre-news',
+      'Assets: ETFs · Stocks · Options',
+      'Also: Crypto · Prediction Markets',
+      'Access: Free tier available'
     ]
   }
 ];
@@ -113,45 +115,6 @@ function ProjectCard({ project }: { project: Project }) {
       const yf = y0 + ((i + 0.7) / n) * (y1 - y0);
       return <line key={i} x1={pj(x0, yf, z1)[0]} y1={pj(x0, yf, z1)[1]} x2={pj(x1, yf, z1)[0]} y2={pj(x1, yf, z1)[1]} stroke="#9a9a9a" strokeWidth="0.7" />;
     });
-
-  // Smooth, slightly staggered easing so the joints roll into the curl naturally.
-  const PIVOT = { transformBox: 'fill-box', transformOrigin: 'bottom center' } as const;
-  const T_MCP = { duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
-  const T_PIP = { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number], delay: 0.05 };
-  const T_DIP = { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number], delay: 0.1 };
-
-  // A single phalanx (rect from topY up-to-down to botY) with highlight + shadow.
-  const phalanx = (cx: number, topY: number, botY: number, w: number) => (
-    <g>
-      <rect x={cx - w / 2} y={topY} width={w} height={botY - topY} rx={w / 2 - 1} fill="#8f8f8f" stroke="#d0d0d0" strokeWidth="1.4" />
-      <rect x={cx - w / 2 + 2} y={topY + 2} width="2.4" height={Math.max(0, botY - topY - 4)} rx="1.2" fill="#c7c7c7" opacity="0.55" />
-      <rect x={cx + w / 2 - 3.2} y={topY + 2} width="2.2" height={Math.max(0, botY - topY - 4)} rx="1.1" fill="#5a5a5a" opacity="0.7" />
-      <line x1={cx - w / 2 + 1.5} y1={botY - 3} x2={cx + w / 2 - 1.5} y2={botY - 3} stroke="#5a5a5a" strokeWidth="0.9" />
-    </g>
-  );
-
-  // Articulated finger: nested MCP/PIP/DIP joints, each rotating about its own
-  // base so a1/a2/a3 produce a smooth, anatomically-natural curl.
-  const digit = (
-    cx: number, baseY: number, lens: [number, number, number], w: number,
-    a1: number, a2: number, a3: number,
-  ) => {
-    const j1 = baseY - lens[0];
-    const j2 = j1 - lens[1];
-    const tip = j2 - lens[2];
-    return (
-      <motion.g style={PIVOT} animate={{ rotate: a1 }} transition={T_MCP}>
-        {phalanx(cx, j1, baseY, w)}
-        <motion.g style={PIVOT} animate={{ rotate: a2 }} transition={T_PIP}>
-          {phalanx(cx, j2, j1, w * 0.9)}
-          <motion.g style={PIVOT} animate={{ rotate: a3 }} transition={T_DIP}>
-            {phalanx(cx, tip, j2, w * 0.82)}
-            <circle cx={cx} cy={tip + 2.5} r="1.7" fill="#3b82f6" opacity="0.85" />
-          </motion.g>
-        </motion.g>
-      </motion.g>
-    );
-  };
 
   return (
     <motion.div
@@ -352,62 +315,96 @@ function ProjectCard({ project }: { project: Project }) {
             )}
           </svg>
         ) : (
+          /* ── Valara: data streams → narrative engine → managed portfolio ── */
           <svg className="w-full h-full" viewBox="0 0 300 250">
-            {/* ── Wrist / forearm ── */}
-            <g>
-              <rect x="136" y="196" width="28" height="46" rx="6" fill="#4a4a4a" stroke="#a0a0a0" strokeWidth="1.5" />
-              <rect x="158" y="198" width="6" height="42" rx="3" fill="#2f2f2f" opacity="0.7" />
-              <rect x="132" y="201" width="36" height="6" rx="3" fill="#5c5c5c" stroke="#b8b8b8" strokeWidth="1" />
-              <rect x="132" y="216" width="36" height="6" rx="3" fill="#5c5c5c" stroke="#b8b8b8" strokeWidth="1" />
-            </g>
+            <defs>
+              <linearGradient id="valaraGrad" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stopColor="#60a5fa" />
+                <stop offset="50%" stopColor="#818cf8" />
+                <stop offset="100%" stopColor="#2dd4bf" />
+              </linearGradient>
+            </defs>
 
-            {/* ── Palm ── */}
-            <g>
-              {/* side thickness for depth */}
-              <path d="M 188 147 L 195 152 L 195 195 L 188 199 Z" fill="#3a3a3a" stroke="#a0a0a0" strokeWidth="1.2" />
-              {/* front plate */}
-              <rect x="114" y="142" width="76" height="58" rx="9" fill="#7e7e7e" stroke="#d0d0d0" strokeWidth="1.6" />
-              {/* knuckle housings */}
-              {[128, 148, 168, 186].map((kx, i) => (
-                <rect key={i} x={kx - 7.5} y="137" width="15" height="13" rx="5" fill="#6a6a6a" stroke="#c4c4c4" strokeWidth="1.2" />
+            {/* ── Layer 1: source streams (drops away on hover) ── */}
+            <motion.g
+              animate={{ y: isHovered ? 26 : 0, opacity: isHovered ? 0.75 : 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <rect x="58" y="188" width="184" height="30" rx="2" fill="none" stroke="#5a5a5a" strokeWidth="1.2" />
+              {/* signal spectrum — one bar per ingested stream */}
+              {[9, 16, 6, 21, 12, 25, 8, 18, 11, 23, 7, 15, 20, 10, 17, 13].map((h, i) => (
+                <line
+                  key={i}
+                  x1={66 + i * 11.4} y1="214" x2={66 + i * 11.4} y2={214 - h}
+                  stroke={i % 3 === 0 ? '#2dd4bf' : '#8a8a8a'}
+                  strokeWidth="2.2"
+                />
               ))}
-              {/* central tendon plate + routing */}
-              <rect x="128" y="156" width="48" height="32" rx="4" fill="#6e6e6e" stroke="#b4b4b4" strokeWidth="1" />
-              <line x1="138" y1="160" x2="138" y2="184" stroke="#4a4a4a" strokeWidth="1" />
-              <line x1="152" y1="160" x2="152" y2="184" stroke="#4a4a4a" strokeWidth="1" />
-              <line x1="166" y1="160" x2="166" y2="184" stroke="#4a4a4a" strokeWidth="1" />
-              {/* screws */}
-              {[[122, 150], [182, 150], [122, 192], [182, 192]].map(([sx, sy], i) => (
-                <circle key={i} cx={sx} cy={sy} r="2.2" fill="#4a4a4a" stroke="#c4c4c4" strokeWidth="0.8" />
+            </motion.g>
+
+            {/* ── Layer 2: narrative engine (stays put, the convergence point) ── */}
+            <g>
+              {/* convergence leaders from the stream band up into the engine */}
+              {[[78, 188], [150, 188], [222, 188]].map(([sx, sy], i) => (
+                <line key={i} x1={sx} y1={sy} x2="150" y2="152" stroke="#4a4a4a" strokeWidth="1" strokeDasharray="3 3" />
               ))}
-              {/* highlight */}
-              <rect x="118" y="147" width="3.5" height="48" rx="1.8" fill="#cccccc" opacity="0.4" />
+              {/* hex housing */}
+              <path
+                d="M 150 100 L 178 116 L 178 148 L 150 164 L 122 148 L 122 116 Z"
+                fill="#101828" stroke="#8a8a8a" strokeWidth="1.6"
+              />
+              {/* Valara "V" mark */}
+              <path d="M 139 120 L 150 143 L 161 120" fill="none" stroke="url(#valaraGrad)" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
+              <path d="M 157 116 L 166 112 L 162 121 Z" fill="url(#valaraGrad)" />
             </g>
 
-            {/* ── Thumb (curls in across the palm on hover) ── */}
-            <g transform="rotate(-42 118 188)">
-              {digit(118, 188, [16, 14, 10], 14, isHovered ? 48 : 0, isHovered ? 52 : 0, isHovered ? 30 : 0)}
-            </g>
-
-            {/* ── Index + middle (stay straight, spread into a V) ── */}
-            {digit(128, 143, [21, 19, 17], 13, isHovered ? -14 : 0, 0, 0)}
-            {digit(148, 143, [24, 22, 20], 13, isHovered ? 14 : 0, 0, 0)}
-
-            {/* ── Ring + pinky (curl down into the palm) ── */}
-            {digit(168, 143, [20, 19, 17], 13, isHovered ? 72 : 0, isHovered ? 62 : 0, isHovered ? 40 : 0)}
-            {digit(186, 143, [16, 15, 13], 12, isHovered ? 74 : 0, isHovered ? 64 : 0, isHovered ? 42 : 0)}
+            {/* ── Layer 3: managed portfolio output (lifts on hover) ── */}
+            <motion.g
+              animate={{ y: isHovered ? -34 : 0 }}
+              transition={{ duration: 0.4, delay: 0.08 }}
+            >
+              {isHovered && (
+                <motion.line
+                  x1="150" y1="96" x2="150" y2="74"
+                  stroke="#2dd4bf" strokeWidth="1" strokeDasharray="3 3"
+                  initial={{ opacity: 0, pathLength: 0 }}
+                  animate={{ opacity: 1, pathLength: 1 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                />
+              )}
+              {/* axes */}
+              <line x1="82" y1="76" x2="82" y2="28" stroke="#5a5a5a" strokeWidth="1.2" />
+              <line x1="82" y1="76" x2="218" y2="76" stroke="#5a5a5a" strokeWidth="1.2" />
+              {/* equity curve, rising */}
+              <polyline
+                points="82,70 105,64 124,67 146,54 168,46 190,34 214,24"
+                fill="none" stroke="url(#valaraGrad)" strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round"
+              />
+              {[[105, 64], [146, 54], [190, 34], [214, 24]].map(([px, py], i) => (
+                <circle key={i} cx={px} cy={py} r="2.4" fill="#0d1117" stroke="#2dd4bf" strokeWidth="1.4" />
+              ))}
+            </motion.g>
 
             {/* ── Annotations on hover ── */}
             {isHovered && (
               <>
-                <motion.text x="208" y="58" fill="#3b82f6" fontSize="15" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
-                  ✌
+                <motion.text x="222" y="30" fill="#2dd4bf" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+                  PORTFOLIO
                 </motion.text>
-                <motion.text x="22" y="66" fill="#3b82f6" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                  16 DOF
+                <motion.text x="186" y="130" fill="#818cf8" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
+                  NARRATIVE
                 </motion.text>
-                <motion.text x="18" y="234" fill="#3b82f6" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
-                  TENDON-DRIVEN
+                <motion.text x="186" y="142" fill="#818cf8" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.28 }}>
+                  ENGINE
+                </motion.text>
+                <motion.text x="18" y="206" fill="#60a5fa" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.32 }}>
+                  20+ DATA SOURCES
+                </motion.text>
+                <motion.text x="18" y="118" fill="#60a5fa" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.36 }}>
+                  ~20 DAYS
+                </motion.text>
+                <motion.text x="18" y="130" fill="#60a5fa" fontSize="9" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.38 }}>
+                  PRE-NEWS
                 </motion.text>
               </>
             )}
@@ -427,6 +424,17 @@ function ProjectCard({ project }: { project: Project }) {
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
               {project.status}
             </div>
+          )}
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-1.5 border border-teal-400/40 bg-teal-400/10 px-2.5 py-1 text-[10px] uppercase tracking-wider text-teal-300 font-mono hover:border-teal-300 hover:text-teal-200 transition-colors"
+            >
+              {project.link.replace(/^https?:\/\//, '')}
+              <span aria-hidden="true">↗</span>
+            </a>
           )}
         </div>
 
